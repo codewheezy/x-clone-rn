@@ -22,7 +22,8 @@ export const createComment = asyncHandler(async (req, res) => {
   const { postId } = req.params;
   const { content } = req.body;
 
-  if (!content || !content.trim() === "") {
+  const trimmed = content?.trim();
+  if (!trimmed) {
     return res.status(HttpStatus.BAD_REQUEST).json({ error: "Comment content is required" })
   }
 
@@ -34,7 +35,7 @@ export const createComment = asyncHandler(async (req, res) => {
   const comment = await Comment.create({
     user: user._id,
     post: postId,
-    content,
+    content: trimmed,
   });
 
   // link the comment to the post
@@ -83,11 +84,4 @@ export const deleteComment = asyncHandler(async (req, res) => {
 })
 
 
-// OK: 200,
-// CREATED: 201,
-// ACCEPTED: 202,
-// BAD_REQUEST: 400,
-// FORBIDDEN: 403,
-// NOT_FOUND: 404,
-// INTERNAL_SERVER_ERROR: 500,
 
