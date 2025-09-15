@@ -4,6 +4,7 @@ import User from "../models/user.model.js";
 import Notification from "../models/notification.model.js";
 import Comment from "../models/comment.model.js";
 import { getAuth } from "@clerk/express";
+import { HttpStatus } from "../constant/http-status.js";
 import cloudinary from "../config/cloudinary.js";
 
 
@@ -19,7 +20,7 @@ export const getPosts = asyncHandler(async (req, res) => {
       },
     });
 
-  res.status(200).json({ posts });
+  res.status(HttpStatus.OK).json({ posts });
 })
 
 export const getPost = asyncHandler(async (req, res) => {
@@ -37,7 +38,7 @@ export const getPost = asyncHandler(async (req, res) => {
 
   if (!post) return res.status(404).json({ error: "Post not found" })
 
-  res.status(200).json({ post });
+  res.status(HttpStatus.OK).json({ post });
 })
 
 export const getUserPosts = asyncHandler(async (req, res) => {
@@ -57,7 +58,7 @@ export const getUserPosts = asyncHandler(async (req, res) => {
       },
     });
 
-  res.status(200).json({ posts })
+  res.status(HttpStatus.OK).json({ posts })
 })
 
 export const createPost = asyncHandler(async (req, res) => {
@@ -100,7 +101,7 @@ export const createPost = asyncHandler(async (req, res) => {
     image: imageUrl
   })
 
-  res.status(201).json({ post })
+  res.status(HttpStatus.CREATED).json({ post })
 });
 
 export const likePost = asyncHandler(async (req, res) => {
@@ -135,7 +136,7 @@ export const likePost = asyncHandler(async (req, res) => {
       })
     }
   }
-  res.status(200).json({
+  res.status(HttpStatus.OK).json({
     message: isLiked ? "Post unliked successfully" : "Post liked successfully"
   })
 });
@@ -159,5 +160,5 @@ export const deletePost = asyncHandler(async (req, res) => {
   // delete the post 
   await Post.findByIdAndDelete(postId)
 
-  res.status(200).json({ message: "Post deleted sucessfully" })
+  res.status(HttpStatus.OK).json({ message: "Post deleted sucessfully" })
 });
