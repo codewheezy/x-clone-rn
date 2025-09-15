@@ -1,9 +1,11 @@
 import asyncHandler from "express-async-handler";
-import Post from "../models/post.model";
-import User from "../models/user.model";
+import Post from "../models/post.model.js";
+import User from "../models/user.model.js";
+import Notification from "../models/notification.model.js";
+import Comment from "../models/comment.model.js";
 import { getAuth } from "@clerk/express";
 import cloudinary from "../config/cloudinary.js";
-import Comment from "../models/comment.model.js";
+
 
 export const getPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find()
@@ -59,7 +61,7 @@ export const getUserPosts = asyncHandler(async (req, res) => {
 })
 
 export const createPost = asyncHandler(async (req, res) => {
-  const { userId } = getAuth();
+  const { userId } = getAuth(req);
   const { content } = req.body;
   const imageFile = req.file;
 
@@ -71,12 +73,10 @@ export const createPost = asyncHandler(async (req, res) => {
   let imageUrl = "";
 
   // upload image to Cloudinary if provided
-  if (imageUrl) {
+  if (imageFile) {
     try {
       // convert buffer to base64 for cloudinary
-      const base64Image = `data:${imageFile.mimetype}:base64${imageFile.butter.toString(
-        "base64"
-      )}`;
+      const base64Image = `data:${imageFile.mimetype};base64,${imageFile.buffer.toString("base64")}`;
 
       const uploadResponse = await cloudinary.uploader.upload(base64Image, {
         folder: "social_media_posts",

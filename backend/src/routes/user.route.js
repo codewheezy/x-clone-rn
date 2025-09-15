@@ -8,9 +8,10 @@ const router = express.Router()
 router.get("/profile/:username", getUserProfile);
 
 // protected routes 
-router.post("/sync", protectRoute, syncUser);
-router.post("/me", protectRoute, getCurrentUser);
-router.put("/profile", protectRoute, updateProfile);
-router.post("/follow/:targetUserId", protectRoute, followUser);
+router.use(protectRoute);
+router.post("/sync", syncUser);
+router.post("/me", getCurrentUser);
+router.put("/profile", updateProfile);
+router.post("/follow/:targetUserId", followUser);
 
 export default router;
